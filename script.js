@@ -11,6 +11,8 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
+let map, mapEvent;
+
 //ANCHOR - Geolocation
 // console.log(navigator.geolocation)
 if (navigator.geolocation)
@@ -22,7 +24,7 @@ if (navigator.geolocation)
       // console.log(latitude,longitude)
       // console.log(`https://www.google.com.tr/maps/@${latitude},${longitude}`)
       const coords = [latitude, longitude];
-      const map = L.map("map").setView(coords, 13);
+      map = L.map("map").setView(coords, 13);
       // console.log(map)
 
       // L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -45,20 +47,11 @@ if (navigator.geolocation)
       //   .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
       //   .openPopup();
 
-      map.on("click", (mapEvent) => {
+      map.on("click", (mapE) => {
         // console.log(mapEvent);
-        const { lat, lng } = mapEvent.latlng;
-        L.marker([lat, lng])
-          .addTo(map)
-          .bindPopup(L.popup({
-            maxWidth: 250,
-            minWidth: 100,
-            autoClose: false,
-            closeOnClick: false,
-            className: 'running-popup'
-          }))
-          .setPopupContent('Workout')
-          .openPopup();
+        mapEvent = mapE;
+        form.classList.remove('hidden')
+        inputDistance.focus()
       });
     },
     () => {
@@ -66,9 +59,26 @@ if (navigator.geolocation)
     }
   );
 
-// if(navigator.geolocation)
-// navigator.geolocation.getCurrentPosition(function (position) {
-//   console.log(position);
-// }, function () {
-//   alert('Could not get your position!');
-// })
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  inputDistance.value = inputCadence.value = inputDuration.value = inputElevation.value;
+  const { lat, lng } = mapEvent.latlng;
+  L.marker([lat, lng])
+    .addTo(map)
+    .bindPopup(
+      L.popup({
+        maxWidth: 250,
+        minWidth: 100,
+        autoClose: false,
+        closeOnClick: false,
+        className: "running-popup",
+      })
+    )
+    .setPopupContent("Workout")
+    .openPopup();
+});
+
+inputType.addEventListener('change', () => {
+  inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
+  inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
+})
