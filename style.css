@@ -179,15 +179,16 @@ a:visited {
   color: var(--color-light--1);
 }
 
-.twitter-link:link,
-.twitter-link:visited {
+.portfolio-link:link,
+.portfolio-link:visited {
+  text-decoration: none;
   color: var(--color-light--1);
   transition: all 0.2s;
 }
 
-.twitter-link:hover,
-.twitter-link:active {
-  color: var(--color-light--2);
+.portfolio-link:hover,
+.portfolio-link:active {
+  color: var(--color-brand--2);
 }
 
 /* MAP */
@@ -220,3 +221,31 @@ a:visited {
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
 }
+
+/* ANCHOR LEAFLET */
+.leaflet-control-zoom .leaflet-bar .leaflet-control {
+  /* border: 2px solid #ff0000; */
+  /* background-clip: padding-box; */
+}
+
+.leaflet-touch .leaflet-bar a {
+  border: none;
+  background-color: #00000000;
+  color: var(--color-brand--2);
+  transition: 300ms;
+}
+.leaflet-touch .leaflet-bar a:hover {
+  background-color: #74747477;
+  color: var(--color-brand--2);
+}
+
+.leaflet-bottom {
+  background-color: #eb1212;
+  display: none;
+}
+/* .leaflet-control {
+  background-color: #00000000;
+}
+.leaflet-bottom .leaflet-right {
+  background-color: #00000000;
+} */
