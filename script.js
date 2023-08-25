@@ -39,7 +39,7 @@ class App {
     this.#map = L.map("map").setView(coords, 13);
 
     L.tileLayer(
-      "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}",
+      "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=b37f0f2c-146f-4044-8c25-f6630572ed42",
       {
         minZoom: 0,
         maxZoom: 20,
