@@ -1,7 +1,5 @@
 "use strict";
 
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
 const form = document.querySelector(".form");
 const containerWorkouts = document.querySelector(".workouts");
 const inputType = document.querySelector(".form__input--type");
@@ -14,6 +12,8 @@ const inputElevation = document.querySelector(".form__input--elevation");
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
+
   constructor(){
     this._getPosition();
     form.addEventListener("submit", this._newWorkout.bind(this));
@@ -31,7 +31,7 @@ class App {
   }
 
   _loadMap(position){
-    console.log(this)
+    // console.log(this)
     const { latitude } = position.coords;
     const { longitude } = position.coords;
 
@@ -53,9 +53,17 @@ class App {
   }
 
   _showForm (mapE) {
+    form.classList.remove('slowslide')
     this.#mapEvent = mapE;
     form.classList.remove('hidden')
     inputDistance.focus()
+  }
+
+  _hideForm () {
+    form.classList.add('slowslide')
+    inputDistance.value = inputCadence.value = inputDuration.value = inputElevation.value = '';
+    form.classList.add('hidden')
+    
   }
 
   _toggleElevationField () {
@@ -66,18 +74,23 @@ class App {
   _newWorkout (e) {
     e.preventDefault();
     const type = inputType.value;
-    const distance = inputDistance.value;
-    const duration = inputDuration.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
     const isNumber = (...nums) => nums.every(e => Number.isFinite(e));
     const allPositive = (...nums) => nums.every(e => e > 0);
+    const { lat, lng } = this.#mapEvent.latlng;
+    let workout;
 
-    // console.log(type, distance, duration);
-
+    // console.log(this.#mapEvent)
+    // console.log(typeof type, typeof distance, typeof duration);
+    // console.log(isNumber(duration, distance))
+    
     if(type === 'running') {
       const cadence = +inputCadence.value; 
       if(!isNumber(duration, distance, cadence) || !allPositive(duration, distance, cadence)){
         return alert('Only positive numbers!')
       }
+      workout = new Running(distance, duration, [lat, lng], cadence);
     }
 
     if(type === 'cycling') {
@@ -85,11 +98,19 @@ class App {
       if(!isNumber(duration, distance, elevation) || !allPositive(duration, distance)){
         return alert('Only positive numbers!')
       }
+      workout = new Cycling(distance, duration, [lat, lng], elevation);
     }
+    // console.log("WO:", workout);
+    this.#workouts.push(workout);
     
-    inputDistance.value = inputCadence.value = inputDuration.value = inputElevation.value;
-    const { lat, lng } = this.#mapEvent.latlng;
-    L.marker([lat, lng])
+    this._renderWorkoutMarker(workout);
+    this._createWorkoutDescription(workout);
+    this._hideForm();
+  }
+
+  _renderWorkoutMarker (workout) {
+    let popupDesc = `${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.dateDesc}`
+    L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -97,30 +118,91 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: "running-popup",
+          className: `${workout.type}-popup`,
         })
       )
-      .setPopupContent("Workout")
+      .setPopupContent(popupDesc)
       .openPopup();
+  }
+
+  _createWorkoutDescription (workout) {
+    let suffixHTML;
+    let workoutHTML = `
+      <li class="workout workout--${workout.type}" data-id='${workout.id}'>
+        <h2 class="workout__title">${workout.dateDesc}</h2>
+        <div class="workout__details">
+          <span class="workout__icon">${workout.type === "running" ? "🏃‍♂️" : "🚴‍♀️"}</span>
+          <span class="workout__value">${workout.distance}</span>
+          <span class="workout__unit">km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⏱</span>
+          <span class="workout__value">${workout.duration}</span>
+          <span class="workout__unit">min</span>
+        </div>
+    `;
+
+    if (workout.type === 'running')
+    suffixHTML = `
+      <div class="workout__details">
+        <span class="workout__icon">⚡️</span>
+        <span class="workout__value">${workout.pace.toFixed(1)}</span>
+        <span class="workout__unit">min/km</span>
+      </div>
+      <div class="workout__details">
+        <span class="workout__icon">🦶🏼</span>
+        <span class="workout__value">${workout.cadence}</span>
+        <span class="workout__unit">spm</span>
+      </div>
+    </li>
+    `;
+
+    if (workout.type === 'cycling')
+    suffixHTML = `
+      <div class="workout__details">
+        <span class="workout__icon">⚡️</span>
+        <span class="workout__value">${workout.speed.toFixed(1)}</span>
+        <span class="workout__unit">km/h</span>
+      </div>
+      <div class="workout__details">
+        <span class="workout__icon">🚴‍♀️</span>
+        <span class="workout__value">${workout.elevationGain}</span>
+        <span class="workout__unit">m</span>
+      </div>
+    </li>
+    `;
+    
+    workoutHTML += suffixHTML;
+    // console.log(workoutHTML)
+    form.insertAdjacentHTML('afterend', workoutHTML);
   }
 }
 
 class Workout {
   id = (Date.now() + '').slice(-10);
   date = new Date;
+
   constructor(distance, duration, coords) {
     this.distance = distance;
     this.duration = duration;
     this.coords = coords;
   }
 
+  _setDateDesc () {
+    // prettier-ignore
+    // const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    // this.dateDesc = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}`
+    this.dateDesc = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${this.date.toLocaleString('default', { month: 'long' })} ${this.date.getDate()}`
+  }
 }
 
 class Running extends Workout {
+  type = "running";
   constructor(distance, duration, coords, cadence) {
     super(distance, duration, coords);
     this.cadence = cadence;
     this.calcPace();
+    this._setDateDesc();
   }
   calcPace() {
     this.pace = this.duration / this.distance;
@@ -129,10 +211,12 @@ class Running extends Workout {
 }
 
 class Cycling extends Workout {
+  type = "cycling";
   constructor(distance, duration, coords, elevationGain) {
     super(distance, duration, coords);
     this.elevationGain = elevationGain;
     this.calcSpeed();
+    this._setDateDesc();
   }
   calcSpeed() {
     this.speed = this.distance / this.duration;

@@ -1,4 +1,7 @@
 :root {
+  --color-gradient--1: linear-gradient(31deg, #003f82 0%, #0058b5 40%, #0077f5 100%);
+  --color-bright--1: #0077f5;
+
   --color-brand--1: #ffb545;
   --color-brand--2: #00c46a;
 
@@ -8,7 +11,8 @@
   --color-light--2: #ececec;
   --color-light--3: rgb(214, 222, 224);
 }
-
+/* background: rgb(0,71,145);
+background: linear-gradient(339deg, rgba(0,71,145,1) 0%, rgba(0,88,181,1) 40%, rgba(0,119,245,1) 100%); */
 * {
   margin: 0;
   padding: 0;
@@ -28,7 +32,7 @@ body {
   height: 100vh;
   overscroll-behavior-y: none;
 
-  background-color: #00c56a;
+  background: var(--color-gradient--1);
   padding: 2.5rem;
 
   display: flex;
@@ -59,8 +63,9 @@ a:visited {
 .workouts {
   list-style: none;
   height: 77vh;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   overflow-x: hidden;
+  padding-right: 5px;
 }
 
 .workouts::-webkit-scrollbar {
@@ -136,6 +141,9 @@ a:visited {
   margin-bottom: 0;
   opacity: 0;
 }
+.form.slowslide {
+  transition: all 1.3s, transform 1ms;
+}
 
 .form__row {
   display: flex;
@@ -173,8 +181,10 @@ a:visited {
 }
 
 .copyright {
+  position: relative;
+  top: 20px;
   margin-top: auto;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   text-align: center;
   color: var(--color-light--1);
 }
@@ -188,7 +198,7 @@ a:visited {
 
 .portfolio-link:hover,
 .portfolio-link:active {
-  color: var(--color-brand--2);
+  color: var(--color-bright--1);
 }
 
 /* MAP */
@@ -222,30 +232,19 @@ a:visited {
   border-left: 5px solid var(--color-brand--1);
 }
 
-/* ANCHOR LEAFLET */
-.leaflet-control-zoom .leaflet-bar .leaflet-control {
-  /* border: 2px solid #ff0000; */
-  /* background-clip: padding-box; */
-}
-
+/* ANCHOR LEAFLET CORE STYLES */
 .leaflet-touch .leaflet-bar a {
   border: none;
   background-color: #00000000;
-  color: var(--color-brand--2);
+  color: var(--color-bright--1);
+  font-size: 30px;
+  /* padding: 15px; */
   transition: 300ms;
 }
 .leaflet-touch .leaflet-bar a:hover {
   background-color: #74747477;
-  color: var(--color-brand--2);
+  /* color: var(--color-brand--2); */
 }
-
 .leaflet-bottom {
-  background-color: #eb1212;
   display: none;
 }
-/* .leaflet-control {
-  background-color: #00000000;
-}
-.leaflet-bottom .leaflet-right {
-  background-color: #00000000;
-} */

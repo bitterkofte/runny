@@ -2,6 +2,11 @@
 
 The Runny Web App is a user-friendly platform designed for runners and cyclists to create, track, and manage their workout routes. This application offers a range of features to enhance your exercise experience, allowing you to seamlessly plan and visualize your running and cycling routes. Whether you're a casual jogger or a dedicated cyclist, this app has something to offer to enhance your fitness journey.
 
+## Preview
+You can check out the website [here](https://bitterkofte.github.io/runny/)!
+A screenshot from the website:
+
+
 ## Features
 
 1. **Geolocation Display:** The app opens with a map centered on your current location, providing you with a quick overview of your surroundings.
