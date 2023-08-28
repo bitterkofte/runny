@@ -40,6 +40,10 @@ body {
   user-select: none;
 }
 
+button, input, textarea {
+  font-family: 'Manrope', sans-serif;
+}
+
 /* GENERAL */
 a:link,
 a:visited {
@@ -144,7 +148,7 @@ a:visited {
   gap: 0.5rem 2.5rem;
 
   /* Match height and activity boxes */
-  height: 9.25rem;
+  /* height: 9.25rem; */
   transition: all 0.5s, transform 1ms;
 }
 
@@ -190,8 +194,27 @@ a:visited {
   background-color: #fff;
 }
 
+.form__input--type {
+  font-size: 12px;
+  padding-left: 2px;
+}
+
 .form__btn {
-  display: none;
+  /* width: 100%; */
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  padding: 5px 0px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  transition: 300ms;
+}
+.form__btn:hover {
+  background-color: var(--color-bright--1);
+  color: #ffffff;
+}
+.form__btn:active {
+  transform: scale(1.1);
 }
 
 .copyright {

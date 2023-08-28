@@ -8,7 +8,7 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 const WelcomeInfo = document.querySelector(".info");
-// const submitForm = document.querySelector(".form__button");
+const submitBtn = document.querySelector(".form__btn");
 
 class App {
   #map;
@@ -20,9 +20,10 @@ class App {
     this._getPosition();
     this._getLocalStorage();
     form.addEventListener("submit", this._newWorkout.bind(this));
-    // submitForm.addEventListener("submit", this._newWorkout.bind(this));
+    submitBtn.addEventListener("click", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._moveToPin.bind(this));
+    console.log("#wo: ", this.#workouts)
     if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
 
