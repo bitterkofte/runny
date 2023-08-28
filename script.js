@@ -13,12 +13,15 @@ class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #mapZoomLevel = 13;
 
   constructor(){
     this._getPosition();
+    this._getLocalStorage();
     form.addEventListener("submit", this._newWorkout.bind(this));
     // submitForm.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
+    containerWorkouts.addEventListener('click', this._moveToPin.bind(this));
   }
 
   _getPosition() {
@@ -36,7 +39,7 @@ class App {
     const { longitude } = position.coords;
 
     const coords = [latitude, longitude];
-    this.#map = L.map("map").setView(coords, 13);
+    this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
 
     L.tileLayer(
       "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=b37f0f2c-146f-4044-8c25-f6630572ed42",
@@ -50,6 +53,7 @@ class App {
     ).addTo(this.#map);
 
     this.#map.on("click", this._showForm.bind(this));
+    this.#workouts.forEach(wo => this._renderWorkoutMarker(wo))
   }
 
   _showForm (mapE) {
@@ -106,6 +110,7 @@ class App {
     this._renderWorkoutMarker(workout);
     this._createWorkoutDescription(workout);
     this._hideForm();
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker (workout) {
@@ -176,11 +181,45 @@ class App {
     // console.log(workoutHTML)
     form.insertAdjacentHTML('afterend', workoutHTML);
   }
+
+  _moveToPin (e) {
+    const clickedWorkout = e.target.closest('.workout');
+    if(!clickedWorkout) return;
+    // console.log('clicked: ', clickedWorkout)
+    const thatWorkout = this.#workouts.find(w => w.id === clickedWorkout.dataset.id);
+    this.#map.setView(thatWorkout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      }
+    })
+    // thatWorkout.clickAdd();
+    // console.log("clicks: ", thatWorkout.clicks)
+  }
+
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts))
+  }
+
+  _getLocalStorage() {
+    const retrieved = JSON.parse(localStorage.getItem('workouts'));
+    console.log("retrieved: ", retrieved)
+
+    if(!retrieved) return;
+    this.#workouts = retrieved;
+    this.#workouts.forEach(wo => this._createWorkoutDescription(wo))
+  }
+
+  reset() {
+    localStorage.removeItem('workouts')
+    location.reload();
+  }
 }
 
 class Workout {
   id = (Date.now() + '').slice(-10);
   date = new Date;
+  clicks = 0;
 
   constructor(distance, duration, coords) {
     this.distance = distance;
@@ -193,6 +232,10 @@ class Workout {
     // const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     // this.dateDesc = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}`
     this.dateDesc = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${this.date.toLocaleString('default', { month: 'long' })} ${this.date.getDate()}`
+  }
+
+  clickAdd () {
+    this.clicks ++;
   }
 }
 
