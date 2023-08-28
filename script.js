@@ -7,6 +7,7 @@ const inputDistance = document.querySelector(".form__input--distance");
 const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
+const WelcomeInfo = document.querySelector(".info");
 // const submitForm = document.querySelector(".form__button");
 
 class App {
@@ -22,6 +23,7 @@ class App {
     // submitForm.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._moveToPin.bind(this));
+    if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
 
   _getPosition() {
@@ -56,7 +58,12 @@ class App {
     this.#workouts.forEach(wo => this._renderWorkoutMarker(wo))
   }
 
+  _hideWelcomeInfo() {
+    WelcomeInfo.classList.add('hidden');
+  }
+
   _showForm (mapE) {
+    this._hideWelcomeInfo();
     form.classList.remove('slowslide')
     this.#mapEvent = mapE;
     form.classList.remove('hidden')
