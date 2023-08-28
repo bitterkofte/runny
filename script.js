@@ -9,21 +9,30 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 const WelcomeInfo = document.querySelector(".info");
 const submitBtn = document.querySelector(".form__btn");
+let deleteWBtn;
 
 class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #markers = [];
   #mapZoomLevel = 13;
 
   constructor(){
     this._getPosition();
     this._getLocalStorage();
+
     form.addEventListener("submit", this._newWorkout.bind(this));
     submitBtn.addEventListener("click", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._moveToPin.bind(this));
-    console.log("#wo: ", this.#workouts)
+    containerWorkouts.addEventListener('click', this._deleteWorkout.bind(this));
+    // deleteWBtn.forEach(el => {
+    //   el.closest().addEventListener('click', this._deleteWorkout.bind(this));
+    // })
+
+    // console.log(deleteWBtn);
+    // console.log("#wo: ", this.#workouts)
     if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
 
@@ -123,6 +132,7 @@ class App {
 
   _renderWorkoutMarker (workout) {
     let popupDesc = `${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.dateDesc}`
+    this.#markers.push(
     L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
@@ -135,13 +145,16 @@ class App {
         })
       )
       .setPopupContent(popupDesc)
-      .openPopup();
+      .openPopup()
+    )
   }
 
+  //ANCHOR - CREATE HTML
   _createWorkoutDescription (workout) {
     let suffixHTML;
     let workoutHTML = `
       <li class="workout workout--${workout.type}" data-id='${workout.id}'>
+      <span class="material-symbols-outlined delete-icon">delete</span>
         <h2 class="workout__title">${workout.dateDesc}</h2>
         <div class="workout__details">
           <span class="workout__icon">${workout.type === "running" ? "🏃‍♂️" : "🚴‍♀️"}</span>
@@ -188,9 +201,11 @@ class App {
     workoutHTML += suffixHTML;
     // console.log(workoutHTML)
     form.insertAdjacentHTML('afterend', workoutHTML);
+    deleteWBtn = document.querySelectorAll(".delete-icon");
   }
 
   _moveToPin (e) {
+    if(e.target.innerText === "delete") return;
     const clickedWorkout = e.target.closest('.workout');
     if(!clickedWorkout) return;
     // console.log('clicked: ', clickedWorkout)
@@ -205,13 +220,28 @@ class App {
     // console.log("clicks: ", thatWorkout.clicks)
   }
 
+  _deleteWorkout(e) {
+    if(e.target.innerText !== "delete") return;
+    const clickedWorkout = e.target.closest('.workout');
+    const thatWorkout = this.#workouts.find(w => w.id === clickedWorkout.dataset.id);
+    let thatIndex = this.#workouts.indexOf(thatWorkout)
+
+    this.#workouts.splice(thatIndex, 1);
+    clickedWorkout.remove();
+
+    this.#map.removeLayer(this.#markers[thatIndex]);
+    this.#markers.splice(thatIndex, 1)
+
+    this._setLocalStorage();
+  }
+
   _setLocalStorage() {
     localStorage.setItem('workouts', JSON.stringify(this.#workouts))
   }
 
   _getLocalStorage() {
     const retrieved = JSON.parse(localStorage.getItem('workouts'));
-    console.log("retrieved: ", retrieved)
+    // console.log("retrieved: ", retrieved)
 
     if(!retrieved) return;
     this.#workouts = retrieved;
