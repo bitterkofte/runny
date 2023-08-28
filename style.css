@@ -11,13 +11,14 @@
   --color-light--2: #ececec;
   --color-light--3: rgb(214, 222, 224);
 }
-/* background: rgb(0,71,145);
-background: linear-gradient(339deg, rgba(0,71,145,1) 0%, rgba(0,88,181,1) 40%, rgba(0,119,245,1) 100%); */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
 }
+
+
 
 html {
   font-size: 62.5%;
@@ -30,7 +31,7 @@ body {
   font-weight: 400;
   line-height: 1.6;
   height: 100vh;
-  overscroll-behavior-y: none;
+  /* overscroll-behavior-y: none; */
 
   background: var(--color-gradient--1);
   padding: 2.5rem;
@@ -52,12 +53,37 @@ a:visited {
 
 /* SIDEBAR */
 .sidebar {
+  /* width: auto; */
   flex-basis: 50rem;
   background-color: var(--color-dark--1);
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
   border-radius: 20px 0 0 20px;
+}
+
+/* MAP */
+#map {
+  flex: 1;
+  /* min-width: 500px; */
+  height: 100%;
+  background-color: var(--color-light--1);
+  border-radius: 0 20px 20px 0;
+}
+
+@media (max-width: 750px){
+  body{
+    flex-direction: column;
+    /* overscroll-behavior-y: auto; */
+  }
+  .sidebar{
+    height: fit-content;
+    border-radius: 20px 20px 0 0;
+    /* background-color: red; */
+  }
+  #map {
+    border-radius: 0 0 20px 20px;
+  }
 }
 
 .logo {
@@ -68,7 +94,9 @@ a:visited {
 
 .workouts {
   list-style: none;
-  height: 77vh;
+  height: 100%;
+  position: relative;
+  /* background-color: grey; */
   /* overflow-y: scroll; */
   overflow-x: hidden;
   padding-right: 5px;
@@ -80,17 +108,22 @@ a:visited {
 
 .info{
   /* background-color: red; */
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: rgb(100, 100, 100);
   text-align: center;
   font-style: italic;
   font-size: 20px;
-  margin-top: 100px;
 }
 .info.hidden{
   display: none;
 }
 
 .workout {
+  position: relative;
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
@@ -114,8 +147,21 @@ a:visited {
   grid-column: 1 / -1;
 }
 
-.workout .material-symbols-outlined {
-  background-color: red;
+.delete-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  border-radius: 5px;
+  padding: 2px;
+  font-size: 20px;
+  background-color: rgb(131, 131, 131);
+  cursor: pointer;
+  transition: 400ms;
+}
+.delete-icon:hover {
+  color: #a00000;
+  background-color: #d05959;
+
 }
 
 .workout__details {
@@ -240,14 +286,6 @@ a:visited {
 .portfolio-link:hover,
 .portfolio-link:active {
   color: var(--color-bright--1);
-}
-
-/* MAP */
-#map {
-  flex: 1;
-  height: 100%;
-  background-color: var(--color-light--1);
-  border-radius: 0 20px 20px 0;
 }
 
 /* Popup width is defined in JS using options */

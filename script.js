@@ -232,6 +232,7 @@ class App {
     this.#map.removeLayer(this.#markers[thatIndex]);
     this.#markers.splice(thatIndex, 1)
 
+    if(this.#workouts.length === 0) WelcomeInfo.classList.remove('hidden');
     this._setLocalStorage();
   }
 
