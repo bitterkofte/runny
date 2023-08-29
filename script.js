@@ -11,6 +11,8 @@ const WelcomeInfo = document.querySelector(".info");
 const submitBtn = document.querySelector(".form__btn");
 const workoutList = document.querySelector(".workout-list");
 const sortBtnContainer = document.querySelector(".sort-container");
+const zoomOut = document.querySelector(".zoom-out");
+const closeForm = document.querySelector(".close-form-btn")
 let deleteWBtn;
 
 class App {
@@ -34,6 +36,9 @@ class App {
     inputType.addEventListener('change',this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._workoutOperations.bind(this));
     sortBtnContainer.addEventListener('click', this._sortEvent.bind(this));
+    zoomOut.addEventListener('click', this._zoomToFit.bind(this));
+    closeForm.addEventListener('click', this._hideForm);
+    
 
     if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
@@ -74,6 +79,13 @@ class App {
     WelcomeInfo.classList.add('hidden');
   }
 
+  _zoomToFit () {
+    // this._hideForm();
+    // form.classList.add('hidden')
+    let group = new L.featureGroup(this.#markers);
+    this.#map.fitBounds(group.getBounds());
+  }
+
   _showForm (mapE) {
     this._hideWelcomeInfo();
     form.classList.remove('slowslide')
@@ -86,7 +98,6 @@ class App {
     form.classList.add('slowslide')
     inputDistance.value = inputCadence.value = inputDuration.value = inputElevation.value = '';
     form.classList.add('hidden')
-    
   }
 
   _toggleElevationField () {
@@ -293,11 +304,6 @@ class App {
     })
     wi.forEach(e => e.remove())
     this.#workouts.forEach(wo => this._createWorkoutDescription(wo))
-
-    // let listItems = Array.from(wi).sort((a, b) => a.dataset.id - b.dataset.id);
-    
-    // listItems.forEach((e,i) => console.log(i, " : ", e.dataset.id))
-
   }
 
   _workoutOperations(e){
