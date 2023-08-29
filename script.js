@@ -12,8 +12,10 @@ const submitBtn = document.querySelector(".form__btn");
 const workoutList = document.querySelector(".workout-list");
 const sortBtnContainer = document.querySelector(".sort-container");
 const zoomOut = document.querySelector(".zoom-out");
-const closeForm = document.querySelector(".close-form-btn")
-let deleteWBtn;
+const closeForm = document.querySelector(".close-form-btn");
+const dropdown = document.querySelector(".dropdown");
+const overlay = document.querySelector(".overlay");
+// let deleteWBtn;
 
 class App {
   #map;
@@ -31,15 +33,47 @@ class App {
   constructor(){
     this._getPosition();
     this._getLocalStorage();
-    form.addEventListener("submit", this._newWorkout.bind(this));
-    submitBtn.addEventListener("click", this._newWorkout.bind(this));
+    this._welcomeInfo();
+
+    form.addEventListener('submit', this._newWorkout.bind(this));
+    submitBtn.addEventListener('click', this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._workoutOperations.bind(this));
     sortBtnContainer.addEventListener('click', this._sortEvent.bind(this));
     zoomOut.addEventListener('click', this._zoomToFit.bind(this));
     closeForm.addEventListener('click', this._hideForm);
-    
+    dropdown.addEventListener('click', this._openDropdown.bind(this));
+    overlay.addEventListener('click', this._openDropdown);
 
+  }
+
+  _openDropdown(e) {
+    const workoutAll = document.querySelectorAll(".workout");
+    const content = document.querySelector('.dropdown-content');
+    content.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+
+    content.addEventListener('click', select.bind(this))
+
+    function select (e) {
+      const act = e.target.dataset.select;
+      console.log(act)
+      if(!act) return;
+      // console.log(workoutAll)
+
+      workoutAll.forEach(f => {
+        if(act === 'deleteAll') return;
+        if(act === 'workouts') f.classList.remove('hidden')
+        if(f.dataset.wt !== act) f.classList.add('hidden')
+      })
+
+      if(act === 'deleteAll') this._deleteAll.bind(this, workoutAll)();
+      content.classList.add('hidden');
+      overlay.classList.add('hidden');
+    }
+  }
+
+  _welcomeInfo() {
     if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
 
@@ -166,7 +200,7 @@ class App {
   _createWorkoutDescription (workout) {
     let suffixHTML;
     let workoutHTML = `
-      <li class="workout workout--${workout.type}" data-id='${workout.id}'>
+      <li class="workout workout--${workout.type}" data-wt='${workout.type}' data-id='${workout.id}'>
       <div class='workout-buttons'>
         <span class="material-symbols-outlined edit-icon">edit</span>
         <span class="material-symbols-outlined delete-icon">delete</span>
@@ -219,7 +253,7 @@ class App {
 
     // form.insertAdjacentHTML('afterend', workoutHTML);
     workoutList.insertAdjacentHTML('afterbegin', workoutHTML);
-    deleteWBtn = document.querySelectorAll(".delete-icon");
+    // deleteWBtn = document.querySelectorAll(".delete-icon");
   }
 
   _sortEvent(e) {
@@ -339,6 +373,15 @@ class App {
 
     if(this.#workouts.length === 0) WelcomeInfo.classList.remove('hidden');
     this._setLocalStorage();
+  }
+
+  _deleteAll(workoutAll) {
+    this.#workouts = [];
+    this.#markers = [];
+    workoutAll.forEach(f => f.remove())
+    WelcomeInfo.classList.remove('hidden');
+    // console.log(this.#workouts)
+    // console.log(this.#markers)
   }
 
   _setLocalStorage() {
