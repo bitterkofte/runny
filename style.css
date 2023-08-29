@@ -10,6 +10,7 @@
   --color-light--1: #aaa;
   --color-light--2: #ececec;
   --color-light--3: rgb(214, 222, 224);
+  --color-fade--1: rgb(100, 100, 100);
 }
 
 * {
@@ -92,6 +93,44 @@ a:visited {
   margin-bottom: 4rem;
 }
 
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid var(--color-light--1);
+}
+
+.header .sort-container {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 5px;
+  /* justify-content: space-between; */
+}
+
+.header .srt-btn{
+  /* font-weight: bold;
+  font-style: italic;
+  color: var(--color-light--1); */
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--color-dark--2);
+  line-height: 0;
+  cursor: pointer;
+  transition: 400ms;
+}
+.header .srt-btn:hover {
+  background-color: var(--color-bright--1);
+}
+.header .normal {
+  font-size: 20px;
+}
+.header .mini {
+  font-size: 12px;
+}
+
 .workouts {
   list-style: none;
   height: 100%;
@@ -99,7 +138,7 @@ a:visited {
   /* background-color: grey; */
   /* overflow-y: scroll; */
   overflow-x: hidden;
-  padding-right: 5px;
+  padding: 0 5px;
 }
 
 .workouts::-webkit-scrollbar {
@@ -113,13 +152,17 @@ a:visited {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(100, 100, 100);
+  color: var(--color-fade--1);
   text-align: center;
   font-style: italic;
   font-size: 20px;
 }
 .info.hidden{
   display: none;
+}
+
+.workout-list {
+
 }
 
 .workout {
@@ -133,6 +176,14 @@ a:visited {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.75rem 1.5rem;
+  transition: all 0.5s, transform 1ms;
+}
+.workout.fade {
+  transform: translateY(-30rem);
+  height: 0;
+  padding: 0 2.25rem;
+  margin-bottom: 0;
+  opacity: 0;
 }
 .workout--running {
   border-left: 5px solid var(--color-brand--2);
@@ -147,21 +198,33 @@ a:visited {
   grid-column: 1 / -1;
 }
 
-.delete-icon {
+.workout-buttons {
   position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   top: 15px;
   right: 15px;
-  border-radius: 5px;
+}
+
+.workout .material-symbols-outlined {
   padding: 2px;
-  font-size: 20px;
+  border-radius: 5px;
   background-color: rgb(131, 131, 131);
+  font-size: 20px;
   cursor: pointer;
   transition: 400ms;
+}
+
+/* .delete-icon {
+} */
+.edit-icon:hover {
+  color: #004ba0;
+  background-color: #5979d0;
 }
 .delete-icon:hover {
   color: #a00000;
   background-color: #d05959;
-
 }
 
 .workout__details {
@@ -188,7 +251,8 @@ a:visited {
 }
 
 .form {
-  background-color: var(--color-dark--2);
+  /* background-color: var(--color-dark--2); */
+  background-color: #4e3d6f;
   border-radius: 5px;
   padding: 1.5rem 2.75rem;
   margin-bottom: 1.75rem;

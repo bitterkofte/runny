@@ -9,6 +9,8 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 const WelcomeInfo = document.querySelector(".info");
 const submitBtn = document.querySelector(".form__btn");
+const workoutList = document.querySelector(".workout-list");
+const sortBtnContainer = document.querySelector(".sort-container");
 let deleteWBtn;
 
 class App {
@@ -25,14 +27,9 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
     submitBtn.addEventListener("click", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
-    containerWorkouts.addEventListener('click', this._moveToPin.bind(this));
-    containerWorkouts.addEventListener('click', this._deleteWorkout.bind(this));
-    // deleteWBtn.forEach(el => {
-    //   el.closest().addEventListener('click', this._deleteWorkout.bind(this));
-    // })
+    containerWorkouts.addEventListener('click', this._workoutOperations.bind(this));
+    sortBtnContainer.addEventListener('click', this._sortEvent.bind(this));
 
-    // console.log(deleteWBtn);
-    // console.log("#wo: ", this.#workouts)
     if(this.#workouts.length > 0) this._hideWelcomeInfo();
   }
 
@@ -154,7 +151,10 @@ class App {
     let suffixHTML;
     let workoutHTML = `
       <li class="workout workout--${workout.type}" data-id='${workout.id}'>
-      <span class="material-symbols-outlined delete-icon">delete</span>
+      <div class='workout-buttons'>
+        <span class="material-symbols-outlined edit-icon">edit</span>
+        <span class="material-symbols-outlined delete-icon">delete</span>
+      </div>
         <h2 class="workout__title">${workout.dateDesc}</h2>
         <div class="workout__details">
           <span class="workout__icon">${workout.type === "running" ? "🏃‍♂️" : "🚴‍♀️"}</span>
@@ -200,16 +200,64 @@ class App {
     
     workoutHTML += suffixHTML;
     // console.log(workoutHTML)
-    form.insertAdjacentHTML('afterend', workoutHTML);
+
+    // form.insertAdjacentHTML('afterend', workoutHTML);
+    workoutList.insertAdjacentHTML('afterbegin', workoutHTML);
     deleteWBtn = document.querySelectorAll(".delete-icon");
   }
 
-  _moveToPin (e) {
-    if(e.target.innerText === "delete") return;
+  _sortEvent(e) {
+    
+  }
+
+  _sortWorkouts() {
+    let sortBy = "speedAsc" 
+    let wi = document.querySelectorAll(".workout");
+    this.#workouts.sort((a, b) => {
+      switch (sortBy) {
+        case "dateAsc":
+          return b.id - a.id;
+        case "dateDes":
+          return a.id - b.id;
+        case "distanceAsc":
+          return b.distance - a.distance;
+        case "distanceDes":
+          return a.distance - b.distance;
+        case "durationAsc":
+          return b.duration - a.duration;
+        case "durationDes":
+          return a.duration - b.duration;
+        case "speedAsc":
+          if(a.speed) return b.speed - a.speed;
+          else return b.pace - a.pace;
+        case "speedDes":
+          if(a.speed) return a.speed - b.speed;
+          else return a.pace - b.pace;
+        
+        default:
+          return a.id - b.id;
+      }
+    })
+    wi.forEach(e => e.remove())
+    this.#workouts.forEach(wo => this._createWorkoutDescription(wo))
+
+    // let listItems = Array.from(wi).sort((a, b) => a.dataset.id - b.dataset.id);
+    
+    // listItems.forEach((e,i) => console.log(i, " : ", e.dataset.id))
+
+  }
+
+  _workoutOperations(e){
     const clickedWorkout = e.target.closest('.workout');
     if(!clickedWorkout) return;
-    // console.log('clicked: ', clickedWorkout)
     const thatWorkout = this.#workouts.find(w => w.id === clickedWorkout.dataset.id);
+    let thatIndex = this.#workouts.indexOf(thatWorkout)
+
+    if(e.target.innerText === "delete") this._deleteWorkout(e, clickedWorkout, thatWorkout, thatIndex);
+    else this._moveToPin(e, clickedWorkout, thatWorkout);
+  }
+
+  _moveToPin (e, clickedWorkout, thatWorkout) {
     this.#map.setView(thatWorkout.coords, this.#mapZoomLevel, {
       animate: true,
       pan: {
@@ -220,14 +268,12 @@ class App {
     // console.log("clicks: ", thatWorkout.clicks)
   }
 
-  _deleteWorkout(e) {
-    if(e.target.innerText !== "delete") return;
-    const clickedWorkout = e.target.closest('.workout');
-    const thatWorkout = this.#workouts.find(w => w.id === clickedWorkout.dataset.id);
-    let thatIndex = this.#workouts.indexOf(thatWorkout)
-
+  _deleteWorkout(e, clickedWorkout, thatWorkout, thatIndex) {
     this.#workouts.splice(thatIndex, 1);
-    clickedWorkout.remove();
+    clickedWorkout.classList.add("fade");
+    setTimeout(() => {
+      clickedWorkout.remove();
+    }, 1000);
 
     this.#map.removeLayer(this.#markers[thatIndex]);
     this.#markers.splice(thatIndex, 1)
