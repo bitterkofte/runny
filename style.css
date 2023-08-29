@@ -121,6 +121,9 @@ a:visited {
   cursor: pointer;
   transition: 400ms;
 }
+.header .srt-btn.selected{
+  background-color: #d54f0b;
+}
 .header .srt-btn:hover {
   background-color: var(--color-bright--1);
 }
@@ -219,12 +222,12 @@ a:visited {
 /* .delete-icon {
 } */
 .edit-icon:hover {
-  color: #004ba0;
-  background-color: #5979d0;
+  color: #2a6ebc;
+  background-color: #11255d;
 }
 .delete-icon:hover {
-  color: #a00000;
-  background-color: #d05959;
+  color: #c63333;
+  background-color: #492828;
 }
 
 .workout__details {

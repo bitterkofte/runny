@@ -19,11 +19,16 @@ class App {
   #workouts = [];
   #markers = [];
   #mapZoomLevel = 13;
+  srtV = {
+    dateV : 1,
+    distanceV : 1,
+    durationV : 1,
+    speedV : 1,
+  }
 
   constructor(){
     this._getPosition();
     this._getLocalStorage();
-
     form.addEventListener("submit", this._newWorkout.bind(this));
     submitBtn.addEventListener("click", this._newWorkout.bind(this));
     inputType.addEventListener('change',this._toggleElevationField)
@@ -207,11 +212,59 @@ class App {
   }
 
   _sortEvent(e) {
+    const srtBtn = e.target.closest('.srt-btn');
+    if(!srtBtn) return;
+    const btnType = srtBtn.dataset.type;
+    const siblings = document.querySelectorAll('.srt-btn')
+    const whichSort = (value, btnType) => value === 1 ? btnType+'Asc' : btnType+'Des';
     
+    let sortBy = "dateDes";
+    switch (btnType) {
+      case 'date':
+        this.srtV.dateV *= -1;
+        sortBy = whichSort(this.srtV.dateV, 'date');
+        break;
+      
+      case 'distance':
+        this.srtV.distanceV *= -1;
+        sortBy = whichSort(this.srtV.distanceV, 'distance');
+        break;
+      
+      case 'duration':
+        this.srtV.durationV *= -1;
+        sortBy = whichSort(this.srtV.durationV, 'duration');
+        break;
+      
+      case 'speed':
+        this.srtV.speedV *= -1;
+        sortBy = whichSort(this.srtV.speedV, 'speed');
+        break;
+    
+      default:
+        sortBy = "dateDes";
+        break;
+    }
+
+    console.log(sortBy.slice(-3))
+
+    siblings.forEach(f => {
+      if(f.dataset.type !== btnType) {
+        f.querySelector('.mini').textContent = "remove";
+        // f.style.backgroundColor = "#4d4642";
+        f.classList.remove('selected')
+      }
+      else {
+        f.querySelector('.mini').textContent = sortBy.slice(-3) === 'Asc' ? 'arrow_upward' : 'arrow_downward'
+        // f.style.backgroundColor = "#d54f0b";
+        f.classList.add('selected')
+      }
+    })
+
+    // console.log(sortBy)
+    this._sortWorkouts(sortBy)
   }
 
-  _sortWorkouts() {
-    let sortBy = "speedAsc" 
+  _sortWorkouts(sortBy) {
     let wi = document.querySelectorAll(".workout");
     this.#workouts.sort((a, b) => {
       switch (sortBy) {
