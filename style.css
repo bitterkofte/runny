@@ -566,3 +566,11 @@ a:visited {
 .leaflet-bottom {
   display: none;
 }
+
+.w-editing {
+  width: 100%;
+  background-color: #fff;
+}
+.w-editing.hidden  {
+  display: none;
+}
