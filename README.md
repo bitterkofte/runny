@@ -5,7 +5,7 @@ The Runny Web App is a user-friendly platform designed for runners and cyclists 
 ## Preview
 You can check out the website [here](https://bitterkofte.github.io/runny/)!
 A screenshot from the website:
-
+![screenshot](assets/screenshot.jpeg)
 
 ## Features
 
