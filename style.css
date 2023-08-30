@@ -52,6 +52,71 @@ a:visited {
   color: var(--color-brand--1);
 }
 
+/* MODAL */
+.w-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  background-color: rgb(80, 0, 0);
+  padding: 15px;
+  border: 2px solid #ff0000;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 5000;
+}
+.w-modal.hidden{
+  display: none;
+}
+.w-modal .cls-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  transition: 400ms;
+}
+.w-modal .cls-btn:hover {
+  cursor: pointer;
+  color: #0077f5;
+}
+.w-modal h2 {
+  margin-bottom: 10px;
+}
+.w-modal p {
+  margin-bottom: 10px;
+}
+.w-modal .btn-cnt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.w-modal button {
+  background-color: var(--color-dark--1);
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: 400ms;
+}
+.w-modal button:hover {
+  background-color: var(--color-dark--2);
+}
+
+.w-overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 4000;
+}
+.w-overlay.hidden{
+  display: none;
+}
+
 /* SIDEBAR */
 .sidebar {
   /* width: auto; */
@@ -75,7 +140,7 @@ a:visited {
 }
 #map .zoom-out{
   position: absolute;
-  z-index: 4000;
+  z-index: 3000;
   padding: 5px;
   color: var(--color-bright--1);
   border-radius: 10px;
@@ -111,22 +176,25 @@ a:visited {
 
 .dropdown {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .dropdown-content{
   position: absolute;
-  top: 0px;
-  width: 120px;
+  top: -4px;
+  left: -8px;
+  width: 140px;
   display: flex;
   flex-direction: column;
   background-color: var(--color-dark--2);
   font-size: 20px;
+  font-weight: bold;
   z-index: 3;
   border-radius: 0 0 10px 10px;
   overflow: hidden;
   box-shadow: 3px 3px 15px rgb(36, 36, 36);
-
-
 }
 .dropdown-content.hidden{
   display: none;
@@ -134,10 +202,16 @@ a:visited {
 
 .dd-item {
   padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .dd-item:hover {
-  background-color: var(--color-light--1);
+  background-color: var(--color-bright--1);
   cursor: pointer;
+}
+#del:hover{
+  background-color: #f51900;
 }
 
 .overlay {
@@ -153,7 +227,6 @@ a:visited {
 .overlay.hidden {
   display: none;
 }
-
 
 .header{
   position: relative;

@@ -19,15 +19,51 @@
     <title>Runny</title>
   </head>
   <body>
+    <div class='w-modal hidden'>
+      <span class="material-symbols-outlined cls-btn">close</span>
+      <h2 class="">Warning</h2>
+      <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repudiandae eum illo praesentium consequuntur? Suscipit ea, cumque libero tenetur in error numquam non voluptates omnis inventore minus commodi nemo blanditiis?</p>
+      <div class='btn-cnt'>
+        <button class="cancel-btn">Cancel</button>
+        <button class="ok-btn">OK</button>
+      </div>
+    </div>
+    <div class="w-overlay hidden"></div>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
       <div class='header'>
-        <h1 class="dropdown">Workouts</h1>
+        <h1 class="dropdown">
+          Workouts
+          <span class="material-symbols-outlined expand">
+            expand_more
+          </span>
+        </h1>
         <div class="dropdown-content hidden">
-          <p class="dd-item" data-select="workouts">Workouts</p>
-          <p class="dd-item" data-select="running">Running</p>
-          <p class="dd-item" data-select="cycling">Cycling</p>
-          <p class="dd-item" data-select="deleteAll">Delete All</p>
+          <p class="dd-item" data-select="workouts">
+            <!-- <span class=''>Workouts</span> -->
+            Workouts
+            <span class="material-symbols-outlined expand">
+            expand_less
+            </span>
+        </p>
+          <p class="dd-item" data-select="running">
+            <span class="material-symbols-outlined">
+              directions_run
+            </span>
+            Running
+          </p>
+          <p class="dd-item" data-select="cycling">
+            <span class="material-symbols-outlined">
+              directions_bike
+            </span>
+            Cycling
+          </p>
+          <p class="dd-item" data-select="deleteAll" id="del">
+            <span class="material-symbols-outlined">
+              delete_forever
+            </span>
+            Delete All
+          </p>
         </div>
         <div class="overlay hidden"></div>
         <div class="sort-container">

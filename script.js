@@ -42,9 +42,41 @@ class App {
     sortBtnContainer.addEventListener('click', this._sortEvent.bind(this));
     zoomOut.addEventListener('click', this._zoomToFit.bind(this));
     closeForm.addEventListener('click', this._hideForm);
+    overlay.addEventListener('click', this._closeDropdown);
     dropdown.addEventListener('click', this._openDropdown.bind(this));
-    overlay.addEventListener('click', this._openDropdown);
+  }
 
+  _showWarningModal() {
+    let action;
+    const wModal = document.querySelector(".w-modal");
+    const wOverlay = document.querySelector(".w-overlay");
+
+    wModal.classList.remove('hidden')
+    wOverlay.classList.remove('hidden')
+
+    wOverlay.addEventListener('click', this._closeWarningModal)
+    // const clsBtn = wModal.querySelector(".cls-btn")
+    // const cancelBtn = wModal.querySelector(".cancel-btn")
+    // const okBtn = wModal.querySelector(".ok-btn")
+
+    return new Promise(function(resolve, reject) {
+      wModal.addEventListener('click', modalAction)
+
+      function modalAction(e) {
+        // console.log(e.target)
+        let targetBtn = e.target.classList;
+        if(targetBtn.contains("cls-btn") || targetBtn.contains("cancel-btn")) resolve(false);
+        if(targetBtn.contains("ok-btn")) resolve(true);
+      }
+    });
+  }
+
+  _closeWarningModal () {
+    const wModal = document.querySelector(".w-modal");
+    const wOverlay = document.querySelector(".w-overlay");
+    wModal.classList.add('hidden')
+    wOverlay.classList.add('hidden')
+    return;
   }
 
   _openDropdown(e) {
@@ -56,21 +88,28 @@ class App {
     content.addEventListener('click', select.bind(this))
 
     function select (e) {
-      const act = e.target.dataset.select;
-      console.log(act)
+      const act = e.target.closest('.dd-item').dataset.select;
+      // console.log(act)
       if(!act) return;
       // console.log(workoutAll)
 
       workoutAll.forEach(f => {
+        f.classList.remove('hidden')
         if(act === 'deleteAll') return;
         if(act === 'workouts') f.classList.remove('hidden')
-        if(f.dataset.wt !== act) f.classList.add('hidden')
+        else if(f.dataset.wt !== act) f.classList.add('hidden')
       })
 
       if(act === 'deleteAll') this._deleteAll.bind(this, workoutAll)();
-      content.classList.add('hidden');
-      overlay.classList.add('hidden');
+      
+      this._closeDropdown();
     }
+  }
+
+  _closeDropdown (e) {
+    const content = document.querySelector('.dropdown-content');
+    content.classList.add('hidden');
+    overlay.classList.add('hidden');
   }
 
   _welcomeInfo() {
@@ -376,10 +415,23 @@ class App {
   }
 
   _deleteAll(workoutAll) {
-    this.#workouts = [];
-    this.#markers = [];
-    workoutAll.forEach(f => f.remove())
-    WelcomeInfo.classList.remove('hidden');
+    // let x = this._showWarningModal();
+    // console.log('x: ', x)
+    // if(x !== true) return;
+    // console.log(true)
+    this._showWarningModal().then((pr) => {
+      console.log("pr: ", pr)
+      if(pr){
+        this.#workouts = [];
+        this.#markers = [];
+        workoutAll.forEach(f => f.remove())
+        WelcomeInfo.classList.remove('hidden');
+        this._closeWarningModal();
+      }
+      else this._closeWarningModal();
+    })
+    
+
     // console.log(this.#workouts)
     // console.log(this.#markers)
   }
