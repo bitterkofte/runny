@@ -46,10 +46,12 @@ class App {
     dropdown.addEventListener('click', this._openDropdown.bind(this));
   }
 
-  _showWarningModal() {
+  _showWarningModal(title, description) {
     let action;
     const wModal = document.querySelector(".w-modal");
     const wOverlay = document.querySelector(".w-overlay");
+    document.querySelector(".m-title").textContent = title;
+    document.querySelector(".m-desc").textContent = description;
 
     wModal.classList.remove('hidden')
     wOverlay.classList.remove('hidden')
@@ -195,7 +197,7 @@ class App {
     if(type === 'running') {
       const cadence = +inputCadence.value; 
       if(!isNumber(duration, distance, cadence) || !allPositive(duration, distance, cadence)){
-        return alert('Only positive numbers!')
+        return this._showWarningModal('Invalid Inputs', 'Inputs must have positive numbers!').then((p) => this._closeWarningModal());
       }
       workout = new Running(distance, duration, [lat, lng], cadence);
     }
@@ -415,14 +417,13 @@ class App {
   }
 
   _deleteAll(workoutAll) {
-    // let x = this._showWarningModal();
-    // console.log('x: ', x)
-    // if(x !== true) return;
-    // console.log(true)
-    this._showWarningModal().then((pr) => {
+    let title = "Delete All Workouts"
+    let description = "Are sure you want to delete all workouts? This is an undoable action! "
+    this._showWarningModal(title, description).then((pr) => {
       console.log("pr: ", pr)
       if(pr){
         this.#workouts = [];
+        this.#markers.forEach((f, i) => this.#map.removeLayer(f));
         this.#markers = [];
         workoutAll.forEach(f => f.remove())
         WelcomeInfo.classList.remove('hidden');

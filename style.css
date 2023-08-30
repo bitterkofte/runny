@@ -65,6 +65,7 @@ a:visited {
   border-radius: 5px;
   box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
   z-index: 5000;
+  /* transition: 400ms; */
 }
 .w-modal.hidden{
   display: none;
@@ -73,17 +74,19 @@ a:visited {
   position: absolute;
   top: 5px;
   right: 5px;
-  transition: 400ms;
+  transition: 300ms;
 }
 .w-modal .cls-btn:hover {
   cursor: pointer;
-  color: #0077f5;
+  /* color: #0077f5; */
 }
 .w-modal h2 {
+  font-size: 25px;
   margin-bottom: 10px;
 }
 .w-modal p {
-  margin-bottom: 10px;
+  font-size: 18px;
+  margin-bottom: 15px;
 }
 .w-modal .btn-cnt {
   display: flex;
@@ -97,10 +100,16 @@ a:visited {
   border: none;
   color: white;
   cursor: pointer;
-  transition: 400ms;
+  transition: 300ms;
 }
 .w-modal button:hover {
   background-color: var(--color-dark--2);
+}
+.w-modal .ok-btn {
+  background-color: #008446;
+}
+.w-modal .ok-btn:hover {
+  background-color: #009851;
 }
 
 .w-overlay{
@@ -169,9 +178,11 @@ a:visited {
 }
 
 .logo {
-  height: 5.2rem;
+  /* height: 5.2rem; */
+  width: 250px;
   align-self: center;
   margin-bottom: 4rem;
+  -webkit-user-drag: none;
 }
 
 .dropdown {
@@ -205,6 +216,7 @@ a:visited {
   display: flex;
   align-items: center;
   gap: 5px;
+  transition: 400ms;
 }
 .dd-item:hover {
   background-color: var(--color-bright--1);
@@ -428,11 +440,15 @@ a:visited {
 .material-symbols-outlined.close-form-btn {
   position: absolute;
   top: 5px;
-  right: 10px;
+  right: 19px;
   border-radius: 5px;
   font-size: 18px;
   background-color: rgba(255, 0, 0, 0.305);
   cursor: pointer;
+  transition: 300ms;
+}
+.close-form-btn:hover {
+  background-color: rgba(255, 0, 0, 0.602);
 }
 
 .form__row {
@@ -480,6 +496,7 @@ a:visited {
   border-radius: 6px;
   font-weight: 700;
   transition: 300ms;
+  cursor: pointer;
 }
 .form__btn:hover {
   background-color: var(--color-bright--1);
