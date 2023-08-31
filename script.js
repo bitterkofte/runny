@@ -389,7 +389,7 @@ class App {
     let thatIndex = this.#workouts.indexOf(thatWorkout)
 
     if(e.target.innerText === "delete") this._deleteWorkout(e, clickedWorkout, thatWorkout, thatIndex);
-    if(e.target.innerText === "edit") // editHandler
+    // if(e.target.innerText === "edit") // editHandler
     else this._moveToPin(e, clickedWorkout, thatWorkout);
   }
 
